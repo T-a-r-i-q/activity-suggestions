@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rain or Shine Fun Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find fun indoor and outdoor activities based on current weather conditions near you.">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="Header" role="banner">
+        <img src="images/cloud.png" alt="Illustration of a cloud in the sky" class="cloud">
+        <h1>Rain or Shine <br>Fun Finder</h1>
+        <img src="images/sun.png" alt="Illustration of the sun shining brightly" class="sun">
+    </div>
+    <div id="Context" role="main">
+        <p>Do you have boredom you need a cure for? 
+            <br> Perhaps your plans have been spoiled by the weather?
+            <br> Are you unsure of what's on offer in the area? <br> Then you've come to the right place! 
+            <br>
+            <br>Simply allow your location to be used and click the button below to find out what fun activities are available in your area that are suitable for the current local weather conditions.
+        </p>
+    </div>
+    <div id="Button">
+        <button id="getActivities" aria-label="Generate local activities based on current weather">Generate local activities</button>
+    </div>
+    <div id="testWeather" aria-hidden="true" hidden>
+    <button onclick="simulateWeather(35, 'Clear')">☀️ Test Hot</button>
+    <button onclick="simulateWeather(5, 'Clear')">❄️ Test Cold</button>
+    <button onclick="simulateWeather(20, 'Rain')">🌧️ Test Rain</button>
+    <button onclick="simulateWeather(22, 'Clouds')">🌤️ Test Mild</button>
+    </div>
+    <div id="status" role="status" aria-live="polite"></div>
+    <div id="weather" role="region" aria-label="Current weather information"></div>
+    <div id="suggestions" role="region" aria-label="Activity suggestions list"></div>
+    <div id="weather-effect" aria-hidden="true"></div>
+</body>
+</html>
