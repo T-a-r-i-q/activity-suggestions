@@ -238,7 +238,7 @@ function renderSuggestions(data, type) {
 
     if (item.place_id) {
       // Primary: place_id variant (works on desktop; sometimes mobile prefers other forms)
-      mapsUrl = `https://www.google.com/maps/place/?q=place_id:${item.place_id}`;
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query_place_id=${item.place_id}`;
     }
 
     // If we have geometry (lat/lng), prefer coordinates for cross-device reliability
