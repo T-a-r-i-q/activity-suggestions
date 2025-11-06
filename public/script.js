@@ -231,9 +231,29 @@ function renderSuggestions(data, type) {
   const places = data.slice(0, 6);
 
   places.forEach((item) => {
-    const mapsUrl = item.place_id
-      ? `https://www.google.com/maps/search/?api=1&query_place_id=${item.place_id}`
-      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + " " + (item.vicinity || ""))}`;
+    // 1) Try exact place_id link (good for desktop)
+    // 2) Fallback to coordinates (better cross-device reliability)
+    // 3) Last resort: text search (name + vicinity)
+    let mapsUrl = null;
+
+    if (item.place_id) {
+      // Primary: place_id variant (works on desktop; sometimes mobile prefers other forms)
+      mapsUrl = `https://www.google.com/maps/place/?q=place_id:${item.place_id}`;
+    }
+
+    // If we have geometry (lat/lng), prefer coordinates for cross-device reliability
+    const lat = item.geometry?.location?.lat;
+    const lng = item.geometry?.location?.lng;
+    if (lat !== undefined && lng !== undefined) {
+      // Use the coordinates form (reliable on mobile & desktop; opens app when available)
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat + ',' + lng)}`;
+    }
+
+    // If still nothing, fall back to a text search
+    if (!mapsUrl) {
+      const q = encodeURIComponent((item.name || "") + " " + (item.vicinity || ""));
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+    }
 
     const card = document.createElement("a");
     card.href = mapsUrl;
