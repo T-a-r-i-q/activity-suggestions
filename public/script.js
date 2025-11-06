@@ -283,8 +283,13 @@ function renderSuggestions(data, type) {
     address.textContent = item.vicinity || "Address unavailable";
 
     const open = document.createElement("p");
-    if (item.opening_hours) {
-      open.textContent = item.opening_hours.open_now ? "🟢 Open now" : "🔴 Closed";
+    if (item.opening_hours && "open_now" in item.opening_hours) {
+      open.textContent = item.opening_hours.open_now
+        ? "🟢 Open now"
+        : "🔴 Closed";
+    } else {
+      open.textContent = "ℹ️ Hours not available";
+      open.style.opacity = "0.8"; // optional: make it look slightly secondary
     }
 
     card.appendChild(img);
