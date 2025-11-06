@@ -231,29 +231,27 @@ function renderSuggestions(data, type) {
   const places = data.slice(0, 6);
 
   places.forEach((item) => {
-    // 1) Try exact place_id link (good for desktop)
-    // 2) Fallback to coordinates (better cross-device reliability)
-    // 3) Last resort: text search (name + vicinity)
-    let mapsUrl = null;
+    let mapsUrl;
 
-    if (item.place_id) {
-      // Primary: place_id variant (works on desktop; sometimes mobile prefers other forms)
-      mapsUrl = `https://www.google.com/maps/search/?api=1&query_place_id=${item.place_id}`;
+    // 🗺️ Try the reliable desktop-friendly method first
+    if (item.name) {
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        item.name + " " + (item.vicinity || "")
+      )}`;
     }
 
-    // If we have geometry (lat/lng), prefer coordinates for cross-device reliability
+    // 📍 If no name or vicinity, use lat/lng as fallback (good for mobile)
     const lat = item.geometry?.location?.lat;
     const lng = item.geometry?.location?.lng;
-    if (lat !== undefined && lng !== undefined) {
-      // Use the coordinates form (reliable on mobile & desktop; opens app when available)
-      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat + ',' + lng)}`;
+    if (!mapsUrl && lat !== undefined && lng !== undefined) {
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
     }
 
-    // If still nothing, fall back to a text search
-    if (!mapsUrl) {
-      const q = encodeURIComponent((item.name || "") + " " + (item.vicinity || ""));
-      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
-    }
+    // 🔁 Extra safeguard: if you *do* want to try place_id first, put this AFTER the others
+    // (so that desktop still uses name+vicinity, mobile could use place_id)
+    // if (item.place_id) {
+    //   mapsUrl = `https://www.google.com/maps/place/?q=place_id:${item.place_id}`;
+    // }
 
     const card = document.createElement("a");
     card.href = mapsUrl;
