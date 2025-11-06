@@ -296,7 +296,7 @@ function renderSuggestions(data, type) {
     card.appendChild(name);
     card.appendChild(rating);
     card.appendChild(address);
-    if (item.opening_hours) card.appendChild(open);
+    card.appendChild(open);
     container.appendChild(card);
   });
 }
