@@ -232,7 +232,7 @@ function renderSuggestions(data, type) {
 
   places.forEach((item) => {
     const mapsUrl = item.place_id
-      ? `https://www.google.com/maps/place/?q=place_id:${item.place_id}`
+      ? `https://www.google.com/maps/search/?api=1&query_place_id=${item.place_id}`
       : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + " " + (item.vicinity || ""))}`;
 
     const card = document.createElement("a");
