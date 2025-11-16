@@ -45,8 +45,22 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
+        console.log(weatherData);
+
+        //fix for actual rain detection
+        const isRain = weatherData.weather.some(w =>
+          w.main.toLowerCase().includes("rain")
+        );
+
         const temp = weatherData.main.temp;
-        const condition = weatherData.weather?.[0]?.main || "Unknown";
+
+        //fix allows changes
+        let condition = weatherData.weather?.[0]?.main || "Unknown";
+
+        //fix
+        if (isRain) {
+          condition = "Rain";
+        }
 
       
 
@@ -59,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 🌤️ Add a recommendation message
         let recommendation = "";
 
-        if (condition.toLowerCase().includes("rain")) {
+        if (isRain) {
           recommendation = "🌧️ Due to rainy weather, indoor activities are recommended.";
         } else if (temp > 30) {
           recommendation = "🔥 Due to extreme heat, indoor activities are recommended.";
@@ -74,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateBackground(temp, condition);
         updateWeatherEffects(temp, condition);
 
-        const rainChance = condition.toLowerCase().includes("rain") ? 80 : 20;
+        const rainChance = isRain ? 80 : 20;
         const type = classifyWeather(temp, rainChance);
 
         statusDiv.textContent = `Weather suggests ${type} activities...`;
